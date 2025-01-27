@@ -1,6 +1,10 @@
 const card = document.getElementById('card');
 const counter = document.getElementById('counter');
 const scoreElement = document.getElementById('score');
+const endGameElement = document.getElementById('end-game');
+const finalScoreElement = document.getElementById('final-score');
+const restartButton = document.getElementById('restart-button');
+
 let isDragging = false;
 let startX, offsetX;
 
@@ -59,23 +63,76 @@ function handleSwipeEnd() {
 
         // Esperar a que termine la animación antes de actualizar la tarjeta
         setTimeout(() => {
-            currentIndex = (currentIndex + 1) % questions.length;
-            updateCard();
+            currentIndex++;
 
-            // Restablecer la tarjeta al centro sin animación
-            card.style.transition = 'none'; // Desactivar transición
-            card.style.transform = 'translate(0, 0) rotate(0deg)';
-            card.style.opacity = '1';
+            // Verificar si el juego ha terminado
+            if (currentIndex >= questions.length) {
+                showEndGame();
+            } else {
+                updateCard();
 
-            // Reactivar la transición después de un breve retraso
-            setTimeout(() => {
-                card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
-            }, 10); // Breve retraso para reactivar la transición
+                // Restablecer la tarjeta al centro sin animación
+                card.style.transition = 'none'; // Desactivar transición
+                card.style.transform = 'translate(0, 0) rotate(0deg)';
+                card.style.opacity = '1';
+
+                // Reactivar la transición después de un breve retraso
+                setTimeout(() => {
+                    card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+                }, 10); // Breve retraso para reactivar la transición
+            }
         }, 500); // Esperar 500ms para que termine la animación
     } else {
         resetCard();
     }
 }
+
+// Función para lanzar el confeti
+function launchConfetti() {
+    confetti({
+        particleCount: 100, // Cantidad de partículas de confeti
+        spread: 70, // Ángulo de dispersión
+        origin: { y: 0.6 }, // Origen del confeti (parte inferior de la pantalla)
+    });
+}
+
+// Función para mostrar el mensaje de fin del juego
+function showEndGame() {
+    endGameElement.classList.remove('hidden');
+    finalScoreElement.textContent = `Respuestas correctas: ${correctAnswers} de ${questions.length}`;
+
+    // Lanzar el confeti si todas las respuestas son correctas
+    if (correctAnswers === questions.length) {
+        launchConfetti();
+    }
+}
+
+// Función para reiniciar el juego
+function restartGame() {
+    currentIndex = 0;
+    correctAnswers = 0;
+
+    // Restablecer la tarjeta a su estado inicial
+    card.style.transition = 'none'; // Desactivar transición temporalmente
+    card.style.transform = 'translate(0, 0) rotate(0deg)'; // Centrar la tarjeta
+    card.style.opacity = '1'; // Hacerla visible
+    card.style.backgroundColor = '#fff'; // Restablecer el color de fondo
+
+    // Actualizar la tarjeta y la puntuación
+    updateCard();
+    scoreElement.textContent = `Correctas: 0/${questions.length}`;
+
+    // Ocultar el mensaje de fin del juego
+    endGameElement.classList.add('hidden');
+
+    // Reactivar la transición después de un breve retraso
+    setTimeout(() => {
+        card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+    }, 10); // Breve retraso para reactivar la transición
+}
+
+// Evento para reiniciar el juego
+restartButton.addEventListener('click', restartGame);
 
 // Eventos para el deslizamiento
 card.addEventListener('mousedown', (e) => {
