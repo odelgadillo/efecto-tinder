@@ -18,6 +18,27 @@ function updateCard() {
     cardQuestion.textContent = questions[currentIndex].question;
 }
 
+// Función para restablecer la tarjeta al centro
+function resetCard() {
+    card.style.transition = 'transform 0.3s ease';
+    card.style.transform = 'translate(0, 0) rotate(0deg)';
+}
+
+// Función para manejar el final del deslizamiento
+function handleSwipeEnd() {
+    if (Math.abs(offsetX) > 100) {
+        if (offsetX > 0) {
+            console.log("Verdadero");
+        } else {
+            console.log("Falso");
+        }
+        // Actualizar la tarjeta
+        currentIndex = (currentIndex + 1) % questions.length;
+        updateCard();
+    }
+    resetCard();
+}
+
 // Eventos para el deslizamiento
 card.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -37,22 +58,13 @@ card.addEventListener('mousemove', (e) => {
 card.addEventListener('mouseup', () => {
     if (!isDragging) return;
     isDragging = false;
-    card.style.transition = 'transform 0.3s ease'; // Reactiva la transición
+    handleSwipeEnd();
+});
 
-    // Determinar si la tarjeta se deslizó lo suficiente
-    if (Math.abs(offsetX) > 100) {
-        if (offsetX > 0) {
-            console.log("Verdadero");
-        } else {
-            console.log("Falso");
-        }
-        // Actualizar la tarjeta
-        currentIndex = (currentIndex + 1) % questions.length;
-        updateCard();
-    }
-
-    // Restablecer la posición de la tarjeta
-    card.style.transform = 'translate(0, 0) rotate(0deg)';
+card.addEventListener('mouseleave', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    handleSwipeEnd();
 });
 
 // Inicializar la primera tarjeta
