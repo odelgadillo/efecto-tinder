@@ -19,6 +19,7 @@ function updateCard() {
     const cardQuestion = card.querySelector('.card-question');
     cardImage.src = questions[currentIndex].image;
     cardQuestion.textContent = questions[currentIndex].question;
+    card.style.backgroundColor = '#fff'; // Restablecer el color de fondo a blanco
     counter.textContent = `Pregunta ${currentIndex + 1} de ${questions.length}`; // Actualizar contador
 }
 
