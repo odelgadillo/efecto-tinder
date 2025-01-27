@@ -1,6 +1,6 @@
 const card = document.getElementById('card');
 let isDragging = false;
-let startX, startY, offsetX;
+let startX, offsetX;
 
 // Datos de ejemplo (preguntas e imágenes)
 const questions = [
@@ -22,12 +22,13 @@ function updateCard() {
 card.addEventListener('mousedown', (e) => {
     isDragging = true;
     startX = e.clientX;
-    startY = e.clientY;
     card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
 });
 
 card.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
+    e.preventDefault(); // Evita el scroll no deseado
+
     offsetX = e.clientX - startX;
     // Limita el movimiento horizontal
     card.style.transform = `translate(${offsetX}px, 0) rotate(${offsetX * 0.1}deg)`;
