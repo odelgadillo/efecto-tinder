@@ -1,15 +1,17 @@
 const card = document.getElementById('card');
 const counter = document.getElementById('counter');
+const scoreElement = document.getElementById('score');
 let isDragging = false;
 let startX, offsetX;
 
 // Datos de ejemplo (preguntas e imágenes)
 const questions = [
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un científico famoso?" },
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un artista reconocido?" },
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un político importante?" },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un científico famoso?", answer: true },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un artista reconocido?", answer: false },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un político importante?", answer: true },
 ];
 let currentIndex = 0;
+let correctAnswers = 0;
 
 // Función para actualizar la tarjeta
 function updateCard() {
@@ -18,6 +20,14 @@ function updateCard() {
     cardImage.src = questions[currentIndex].image;
     cardQuestion.textContent = questions[currentIndex].question;
     counter.textContent = `Pregunta ${currentIndex + 1} de ${questions.length}`; // Actualizar contador
+}
+
+// Función para actualizar la puntuación
+function updateScore(isCorrect) {
+    if (isCorrect) {
+        correctAnswers++;
+    }
+    scoreElement.textContent = `Correctas: ${correctAnswers}/${questions.length}`;
 }
 
 // Función para restablecer la tarjeta al centro
@@ -30,19 +40,21 @@ function resetCard() {
 // Función para manejar el final del deslizamiento
 function handleSwipeEnd() {
     if (Math.abs(offsetX) > 100) {
-        if (offsetX > 0) {
-            console.log("Verdadero");
-            card.style.backgroundColor = '#d4edda'; // Fondo verde para "Verdadero"
-        } else {
-            console.log("Falso");
-            card.style.backgroundColor = '#f8d7da'; // Fondo rojo para "Falso"
-        }
-        // Actualizar la tarjeta después de un breve retraso
+        const isCorrect = (offsetX > 0 && questions[currentIndex].answer) || (offsetX < 0 && !questions[currentIndex].answer);
+        updateScore(isCorrect);
+
+        // Animación para que la tarjeta "vuele" fuera de la pantalla
+        card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+        card.style.transform = `translate(${offsetX > 0 ? 500 : -500}px, 0) rotate(${offsetX * 0.2}deg)`;
+        card.style.opacity = '0';
+
+        // Actualizar la tarjeta después de la animación
         setTimeout(() => {
             currentIndex = (currentIndex + 1) % questions.length;
             updateCard();
             resetCard();
-        }, 300); // Esperar 300ms para que se vea el cambio de color
+            card.style.opacity = '1'; // Restablecer la opacidad
+        }, 500); // Esperar 500ms para que termine la animación
     } else {
         resetCard();
     }
