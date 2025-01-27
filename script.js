@@ -48,12 +48,20 @@ function handleSwipeEnd() {
         card.style.transform = `translate(${offsetX > 0 ? 500 : -500}px, 0) rotate(${offsetX * 0.2}deg)`;
         card.style.opacity = '0';
 
-        // Actualizar la tarjeta después de la animación
+        // Esperar a que termine la animación antes de actualizar la tarjeta
         setTimeout(() => {
             currentIndex = (currentIndex + 1) % questions.length;
             updateCard();
-            resetCard();
-            card.style.opacity = '1'; // Restablecer la opacidad
+
+            // Restablecer la tarjeta al centro sin animación
+            card.style.transition = 'none'; // Desactivar transición
+            card.style.transform = 'translate(0, 0) rotate(0deg)';
+            card.style.opacity = '1';
+
+            // Reactivar la transición después de un breve retraso
+            setTimeout(() => {
+                card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+            }, 10); // Breve retraso para reactivar la transición
         }, 500); // Esperar 500ms para que termine la animación
     } else {
         resetCard();
