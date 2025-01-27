@@ -4,9 +4,9 @@ let startX, startY, offsetX, offsetY;
 
 // Datos de ejemplo (preguntas e imágenes)
 const questions = [
-    { image: "https://via.placeholder.com/150", question: "¿Es esta persona un científico famoso?" },
-    { image: "https://via.placeholder.com/150", question: "¿Es esta persona un artista reconocido?" },
-    { image: "https://via.placeholder.com/150", question: "¿Es esta persona un político importante?" },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un científico famoso?" },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un artista reconocido?" },
+    { image: "https://picsum.photos/150", question: "¿Es esta persona un político importante?" },
 ];
 let currentIndex = 0;
 
