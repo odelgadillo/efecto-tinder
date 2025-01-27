@@ -21,6 +21,14 @@ function updateCard() {
     cardQuestion.textContent = questions[currentIndex].question;
     card.style.backgroundColor = '#fff'; // Restablecer el color de fondo a blanco
     counter.textContent = `Pregunta ${currentIndex + 1} de ${questions.length}`; // Actualizar contador
+
+    // Aplicar la animación de rebote
+    card.classList.add('bounce');
+
+    // Eliminar la clase de rebote después de que termine la animación
+    setTimeout(() => {
+        card.classList.remove('bounce');
+    }, 500); // Duración de la animación: 500ms
 }
 
 // Función para actualizar la puntuación

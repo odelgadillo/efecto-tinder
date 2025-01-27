@@ -50,3 +50,22 @@ body {
     font-size: 16px;
     color: #555;
 }
+
+/* Animación de rebote */
+@keyframes bounce {
+    0% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(0, -20px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+/* Clase para aplicar la animación */
+.bounce {
+    animation: bounce 0.5s ease;
+}
+
