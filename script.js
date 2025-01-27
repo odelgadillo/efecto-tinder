@@ -1,6 +1,6 @@
 const card = document.getElementById('card');
 let isDragging = false;
-let startX, startY, offsetX, offsetY;
+let startX, startY, offsetX;
 
 // Datos de ejemplo (preguntas e imágenes)
 const questions = [
@@ -23,18 +23,20 @@ card.addEventListener('mousedown', (e) => {
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
+    card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
 });
 
 card.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     offsetX = e.clientX - startX;
-    offsetY = e.clientY - startY;
-    card.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${offsetX * 0.1}deg)`;
+    // Limita el movimiento horizontal
+    card.style.transform = `translate(${offsetX}px, 0) rotate(${offsetX * 0.1}deg)`;
 });
 
 card.addEventListener('mouseup', () => {
     if (!isDragging) return;
     isDragging = false;
+    card.style.transition = 'transform 0.3s ease'; // Reactiva la transición
 
     // Determinar si la tarjeta se deslizó lo suficiente
     if (Math.abs(offsetX) > 100) {
