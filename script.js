@@ -28,7 +28,7 @@ function updateCard() {
     // Eliminar la clase de rebote después de que termine la animación
     setTimeout(() => {
         card.classList.remove('bounce');
-    }, 500); // Duración de la animación: 500ms
+    }, 800); // Duración de la animación: 800ms
 }
 
 // Función para actualizar la puntuación

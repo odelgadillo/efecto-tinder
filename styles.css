@@ -51,21 +51,32 @@ body {
     color: #555;
 }
 
-/* Animación de rebote */
+/* Animación de rebote mejorada */
 @keyframes bounce {
     0% {
-        transform: translate(0, 0);
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-30px);
     }
     50% {
-        transform: translate(0, -20px);
+        transform: translateY(0);
+    }
+    65% {
+        transform: translateY(-15px);
+    }
+    80% {
+        transform: translateY(0);
+    }
+    90% {
+        transform: translateY(-7px);
     }
     100% {
-        transform: translate(0, 0);
+        transform: translateY(0);
     }
 }
 
 /* Clase para aplicar la animación */
 .bounce {
-    animation: bounce 0.5s ease;
+    animation: bounce 0.8s ease;
 }
-
