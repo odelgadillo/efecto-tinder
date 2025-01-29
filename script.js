@@ -171,5 +171,34 @@ card.addEventListener('mouseleave', () => {
     handleSwipeEnd();
 });
 
+card.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].clientX; // Capturar posición inicial del toque
+    card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
+});
+
+card.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault(); // Evita el scroll no deseado
+
+    offsetX = e.touches[0].clientX - startX;
+    card.style.transform = `translate(${offsetX}px, 0) rotate(${offsetX * 0.1}deg)`;
+
+    if (offsetX > 100) {
+        card.style.backgroundColor = '#d4edda';
+    } else if (offsetX < -100) {
+        card.style.backgroundColor = '#f8d7da';
+    } else {
+        card.style.backgroundColor = '#fff';
+    }
+});
+
+card.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    handleSwipeEnd();
+});
+
+
 // Inicializar la primera tarjeta
 updateCard();
