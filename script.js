@@ -15,17 +15,30 @@ const questions = [
     { image: "https://picsum.photos/150", question: "¿Es esta persona un artista reconocido?", answer: false },
     { image: "https://picsum.photos/150", question: "¿Es esta persona un político importante?", answer: true },
 ];
-let currentIndex = 0;
-let correctAnswers = 0;
+const gameState = {
+    currentIndex: 0,
+    correctAnswers: 0,
+};
+
+function getCardContent(index){
+    return{
+        image: questions[index].image,
+        question: questions[index].question,
+        counter: `Pregunta ${index + 1} de ${questions.length}`,
+    };
+}
 
 // Función para actualizar la tarjeta
 function updateCard() {
+    const content = getCardContent(gameState.currentIndex);
     const cardImage = card.querySelector('.card-image');
     const cardQuestion = card.querySelector('.card-question');
-    cardImage.src = questions[currentIndex].image;
-    cardQuestion.textContent = questions[currentIndex].question;
+    
+    cardImage.src = content.image; // Actualizar la imagen
+    cardQuestion.textContent = content.question; // Actualizar la pregunta
+    counter.textContent = content.counter; // Actualizar contador
+    
     card.style.backgroundColor = '#fff'; // Restablecer el color de fondo a blanco
-    counter.textContent = `Pregunta ${currentIndex + 1} de ${questions.length}`; // Actualizar contador
 
     // Aplicar la animación de rebote
     card.classList.add('bounce');
@@ -36,7 +49,7 @@ function updateCard() {
     }, 800); // Duración de la animación: 800ms
 
     // Activar la animación de balanceo y mostrar tutorial al inicio
-    if (currentIndex === 0) {
+    if (gameState.currentIndex === 0) {
         card.classList.add('tutorial-active');
     }
 }
@@ -44,9 +57,9 @@ function updateCard() {
 // Función para actualizar la puntuación
 function updateScore(isCorrect) {
     if (isCorrect) {
-        correctAnswers++;
+        gameState.correctAnswers++;
     }
-    scoreElement.textContent = `Correctas: ${correctAnswers}/${questions.length}`;
+    scoreElement.textContent = `Correctas: ${gameState.correctAnswers}/${questions.length}`;
 }
 
 // Función para restablecer la tarjeta al centro
@@ -56,24 +69,31 @@ function resetCard() {
     card.style.backgroundColor = '#fff'; // Restablecer color de fondo
 }
 
+function evaluateAnswer(offsetX, answer) {
+    return (offsetX > 0 && answer) || (offsetX < 0 && !answer);
+}
+
+// Animación para que la tarjeta "vuele" fuera de la pantalla
+function animateCardSwipe(offsetX) {
+    card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+    card.style.transform = `translate(${offsetX > 0 ? 500 : -500}px, 0) rotate(${offsetX * 0.2}deg)`;
+    card.style.opacity = '0';
+}
+
 // Función para manejar el final del deslizamiento
 function handleSwipeEnd() {
     if (Math.abs(offsetX) > 100) {
 
-        const isCorrect = (offsetX > 0 && questions[currentIndex].answer) || (offsetX < 0 && !questions[currentIndex].answer);
+        const isCorrect = evaluateAnswer(offsetX, questions[gameState.currentIndex].answer);
         updateScore(isCorrect);
-
-        // Animación para que la tarjeta "vuele" fuera de la pantalla
-        card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-        card.style.transform = `translate(${offsetX > 0 ? 500 : -500}px, 0) rotate(${offsetX * 0.2}deg)`;
-        card.style.opacity = '0';
-
+        animateCardSwipe(offsetX);
+        
         // Esperar a que termine la animación antes de actualizar la tarjeta
         setTimeout(() => {
-            currentIndex++;
+            gameState.currentIndex++;
 
             // Verificar si el juego ha terminado
-            if (currentIndex >= questions.length) {
+            if (gameState.currentIndex >= questions.length) {
                 showEndGame();
             } else {
                 updateCard();
@@ -81,6 +101,7 @@ function handleSwipeEnd() {
                 // Restablecer la tarjeta al centro sin animación
                 card.style.transition = 'none'; // Desactivar transición
                 card.style.transform = 'translate(0, 0) rotate(0deg)';
+                card.style.display = 'flex'; // Mostrar la tarjeta nuevamente 
                 card.style.opacity = '1';
 
                 // Reactivar la transición después de un breve retraso
@@ -91,7 +112,7 @@ function handleSwipeEnd() {
         }, 500); // Esperar 500ms para que termine la animación
 
         // Desactivar tutorial después del primer deslizamiento
-        if (currentIndex === 0) {
+        if (gameState.currentIndex === 0) {
             tutorial.classList.add('hidden'); // Ocultar texto
             card.classList.remove('tutorial-active'); // Detener animación
         }
@@ -112,24 +133,32 @@ function launchConfetti() {
 // Función para mostrar el mensaje de fin del juego
 function showEndGame() {
     endGameElement.classList.remove('hidden');
-    finalScoreElement.textContent = `Respuestas correctas: ${correctAnswers} de ${questions.length}`;
+    finalScoreElement.textContent = `Respuestas correctas: ${gameState.correctAnswers} de ${questions.length}`;
 
     // Lanzar el confeti si todas las respuestas son correctas
-    if (correctAnswers === questions.length) {
+    if (gameState.correctAnswers === questions.length) {
         launchConfetti();
     }
 }
 
-// Función para reiniciar el juego
-function restartGame() {
-    currentIndex = 0;
-    correctAnswers = 0;
-
-    // Restablecer la tarjeta a su estado inicial
+// Restablecer el estado visual de la tarjeta a su estado inicial
+function resetCardStyles(){
     card.style.transition = 'none'; // Desactivar transición temporalmente
     card.style.transform = 'translate(0, 0) rotate(0deg)'; // Centrar la tarjeta
+    card.style.display = 'flex'; // Mostrar la tarjeta
     card.style.opacity = '1'; // Hacerla visible
     card.style.backgroundColor = '#fff'; // Restablecer el color de fondo
+}
+
+function resetGameState(){
+    gameState.currentIndex = 0;
+    gameState.correctAnswers = 0;
+}
+
+// Función para reiniciar el juego
+function restartGame() {
+    resetGameState();
+    resetCardStyles();
 
     // Actualizar la tarjeta y la puntuación
     updateCard();
@@ -147,18 +176,13 @@ function restartGame() {
 // Evento para reiniciar el juego
 restartButton.addEventListener('click', restartGame);
 
-// Eventos para el deslizamiento
-card.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
-});
 
-card.addEventListener('mousemove', (e) => {
+function handleDragMove(event) {
     if (!isDragging) return;
-    e.preventDefault(); // Evita el scroll no deseado
+    event.preventDefault(); // Evita el scroll no deseado
 
-    offsetX = e.clientX - startX;
+    offsetX = (event.clientX || event.touches[0].clientX) - startX;
+    
     // Limita el movimiento horizontal
     card.style.transform = `translate(${offsetX}px, 0) rotate(${offsetX * 0.1}deg)`;
 
@@ -170,7 +194,15 @@ card.addEventListener('mousemove', (e) => {
     } else {
         card.style.backgroundColor = '#fff'; // Blanco si no se ha deslizado lo suficiente
     }
+}
+
+// Eventos para el deslizamiento
+card.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX; // Capturar posición inicial del clic
+    card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
 });
+card.addEventListener('mousemove', handleDragMove);
 
 card.addEventListener('mouseup', () => {
     if (!isDragging) return;
@@ -189,22 +221,7 @@ card.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX; // Capturar posición inicial del toque
     card.style.transition = 'none'; // Desactiva la transición mientras se arrastra
 });
-
-card.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    e.preventDefault(); // Evita el scroll no deseado
-
-    offsetX = e.touches[0].clientX - startX;
-    card.style.transform = `translate(${offsetX}px, 0) rotate(${offsetX * 0.1}deg)`;
-
-    if (offsetX > 100) {
-        card.style.backgroundColor = '#d4edda';
-    } else if (offsetX < -100) {
-        card.style.backgroundColor = '#f8d7da';
-    } else {
-        card.style.backgroundColor = '#fff';
-    }
-});
+card.addEventListener('touchmove', handleDragMove);
 
 card.addEventListener('touchend', () => {
     if (!isDragging) return;
