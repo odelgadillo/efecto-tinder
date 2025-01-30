@@ -122,3 +122,43 @@ body {
 #restart-button:hover {
     background-color: #0056b3;
 }
+
+/* Animación de balanceo */
+@keyframes swing {
+    0% { transform: translateX(0); }    /* Posición inicial */
+    15% { transform: translateX(25px); } /* Movimiento largo a la derecha */
+    30% { transform: translateX(-20px); } /* Movimiento largo a la izquierda */
+    45% { transform: translateX(15px); } /* Movimiento un poco más corto a la derecha */
+    60% { transform: translateX(-10px); } /* Movimiento más corto a la izquierda */
+    75% { transform: translateX(5px); }  /* Movimiento pequeño a la derecha */
+    90% { transform: translateX(-3px); } /* Movimiento muy corto a la izquierda */
+    100% { transform: translateX(0); }   /* Vuelve al centro y se detiene */
+}
+
+/* Aplicar animación a la tarjeta solo al inicio */
+.card.tutorial-active {
+    animation: swing 1.0s ease-in-out 1;
+    /* Repite la animación 3 veces */
+}
+
+/* Estilos para el mensaje de tutorial */
+.tutorial {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    width: 100%;
+}
+
+/* Ocultar el tutorial después del primer swipe */
+.tutorial.hidden {
+    opacity: 0;
+    pointer-events: none;
+}

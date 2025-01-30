@@ -4,6 +4,7 @@ const scoreElement = document.getElementById('score');
 const endGameElement = document.getElementById('end-game');
 const finalScoreElement = document.getElementById('final-score');
 const restartButton = document.getElementById('restart-button');
+const tutorial = document.getElementById('tutorial');
 
 let isDragging = false;
 let startX, offsetX;
@@ -33,6 +34,11 @@ function updateCard() {
     setTimeout(() => {
         card.classList.remove('bounce');
     }, 800); // Duración de la animación: 800ms
+
+    // Activar la animación de balanceo y mostrar tutorial al inicio
+    if (currentIndex === 0) {
+        card.classList.add('tutorial-active');
+    }
 }
 
 // Función para actualizar la puntuación
@@ -53,6 +59,7 @@ function resetCard() {
 // Función para manejar el final del deslizamiento
 function handleSwipeEnd() {
     if (Math.abs(offsetX) > 100) {
+
         const isCorrect = (offsetX > 0 && questions[currentIndex].answer) || (offsetX < 0 && !questions[currentIndex].answer);
         updateScore(isCorrect);
 
@@ -82,6 +89,12 @@ function handleSwipeEnd() {
                 }, 10); // Breve retraso para reactivar la transición
             }
         }, 500); // Esperar 500ms para que termine la animación
+
+        // Desactivar tutorial después del primer deslizamiento
+        if (currentIndex === 0) {
+            tutorial.classList.add('hidden'); // Ocultar texto
+            card.classList.remove('tutorial-active'); // Detener animación
+        }
     } else {
         resetCard();
     }
