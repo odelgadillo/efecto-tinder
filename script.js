@@ -114,12 +114,6 @@ function handleSwipeEnd() {
                 }, 10); // Breve retraso para reactivar la transición
             }
         }, 500); // Esperar 500ms para que termine la animación
-
-        // Desactivar tutorial después del primer deslizamiento
-        if (gameState.currentIndex === 0) {
-            tutorial.classList.add('hidden'); // Ocultar texto
-            card.classList.remove('tutorial-active'); // Detener animación
-        }
     } else {
         resetCard();
     }
@@ -197,6 +191,12 @@ function handleDragMove(event) {
         card.style.backgroundColor = '#f8d7da'; // Rojo para "Falso"
     } else {
         card.style.backgroundColor = '#fff'; // Blanco si no se ha deslizado lo suficiente
+    }
+
+    // Ocultar tutorial solo en la primera interacción
+    if (!tutorial.classList.contains('hidden')) {
+        tutorial.classList.add('hidden'); // Ocultar texto
+        card.classList.remove('tutorial-active');// Detener animación
     }
 }
 
