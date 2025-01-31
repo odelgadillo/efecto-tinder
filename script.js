@@ -13,9 +13,9 @@ let startX, offsetX;
 
 // Datos de ejemplo (preguntas e imágenes)
 const questions = [
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un científico famoso?", optionA: "Opcion a", optionB: "Opcion B", correctAnswer: "A" },
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un artista reconocido?", optionA: "Hola", optionB: "Chau", correctAnswer: "A" },
-    { image: "https://picsum.photos/150", question: "¿Es esta persona un político importante?", optionA: "Rojo", optionB: "Azul", correctAnswer: "A" },
+    { image: "https://picsum.photos/150", question: "¿Quién pintó esta obra maestra?", optionA: "Pablo Picasso", optionB: "Leonardo da Vinci", correctAnswer: "A" },
+    { image: "https://picsum.photos/150", question: "¿En qué saga aparece este personaje?", optionA: "Star Wars", optionB: "El Señor de los Anillos", correctAnswer: "B" },
+    { image: "https://picsum.photos/150", question: "¿Qué ángulo forman las manecillas del reloj a las 3:15?", optionA: "0 grados", optionB: "7.5 grados", correctAnswer: "A" },
 ];
 const gameState = {
     currentIndex: 0,
@@ -41,7 +41,6 @@ function renderCard() {
     card.querySelector('.card-image').src = content.image; // Actualizar la imagen
     card.querySelector('.card-question').textContent = content.question; // Actualizar la pregunta
     counter.textContent = content.counter; // Actualizar contador
-    //card.style.backgroundColor = '#fff';
 
     // Aplicar la animación de rebote
     card.classList.add('bounce');
@@ -81,11 +80,10 @@ function updateScore(isCorrect) {
 function resetCard() {
     card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
     card.style.transform = 'translate(0, 0) rotate(0deg)';
-    //card.style.backgroundColor = '#fff'; // Restablecer color de fondo
 }
 
-function evaluateAnswer(offsetX, answer) {
-    return (offsetX > 0 && answer) || (offsetX < 0 && !answer);
+function evaluateAnswer(offsetX, correctAnswer) {
+    return (offsetX < 0 && correctAnswer == 'A') || (offsetX > 0 && correctAnswer == 'B');
 }
 
 // Animación para que la tarjeta "vuele" fuera de la pantalla
@@ -99,7 +97,7 @@ function animateCardSwipe(offsetX) {
 function handleSwipeEnd() {
     if (Math.abs(offsetX) > 100) {
 
-        const isCorrect = evaluateAnswer(offsetX, questions[gameState.currentIndex].answer);
+        const isCorrect = evaluateAnswer(offsetX, questions[gameState.currentIndex].correctAnswer);
         updateScore(isCorrect);
         animateCardSwipe(offsetX);
 
@@ -151,7 +149,7 @@ function resetCardStyles() {
     card.style.transform = 'translate(0, 0) rotate(0deg)'; // Centrar la tarjeta
     card.style.display = 'flex'; // Mostrar la tarjeta
     card.style.opacity = '1'; // Hacerla visible
-    
+
     card.classList.remove('card-left-active', 'card-right-active'); // Restalecer color de fondo
 
     updateOptionStyles(true, true); // Restablecer las opciones
