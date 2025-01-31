@@ -267,6 +267,38 @@ card.addEventListener('touchend', () => {
     handleSwipeEnd();
 });
 
+optionLeft.addEventListener('click', () => {
+    simulateSwipe(-500); // Simula un deslizamiento hacia la izquierda
+});
+
+optionRight.addEventListener('click', () => {
+    simulateSwipe(500); // Simula un deslizamiento hacia la derecha
+});
+
+function simulateSwipe(offsetX) {
+    const isCorrect = evaluateAnswer(offsetX, questions[gameState.currentIndex].correctAnswer);
+    updateScore(isCorrect);
+    animateCardSwipe(offsetX);
+
+    // Esperar a que termine la animación antes de actualizar la tarjeta
+    setTimeout(() => {
+        gameState.currentIndex++;
+
+        // Verificar si el juego ha terminado
+        if (gameState.currentIndex >= questions.length) {
+            showEndGame();
+        } else {
+            updateCard();
+            resetCardStyles();
+
+            // Reactivar la transición después de un breve retraso
+            setTimeout(() => {
+                card.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+            }, 10); // Breve retraso para reactivar la transición
+        }
+    }, 500); // Esperar 500ms para que termine la animación
+}
+
 
 // Inicializar la primera tarjeta
 updateCard();
