@@ -37,12 +37,6 @@ function renderCard(){
     card.querySelector('.card-question').textContent = content.question; // Actualizar la pregunta
     counter.textContent = content.counter; // Actualizar contador
     card.style.backgroundColor = '#fff';
-}
-
-// Función para actualizar la tarjeta
-function updateCard() {
-    // Llamamos a la función para actualizar la UI
-    renderCard();
 
     // Aplicar la animación de rebote
     card.classList.add('bounce');
@@ -52,9 +46,17 @@ function updateCard() {
         card.classList.remove('bounce');
     }, 800); // Duración de la animación: 800ms
 
+}
+
+// Función para actualizar la tarjeta
+function updateCard() {
+    // Llamamos a la función para actualizar la UI
+    renderCard();
+    
     // Activar la animación de balanceo y mostrar tutorial al inicio
     if (gameState.currentIndex === 0) {
         card.classList.add('tutorial-active');
+        tutorial.classList.remove('hidden'); // Mostrar texto ayuda
     }
 }
 
