@@ -20,6 +20,8 @@ const gameState = {
     correctAnswers: 0,
 };
 
+
+// Obtener el contenido de la tarjeta
 function getCardContent(index){
     return{
         image: questions[index].image,
@@ -28,17 +30,19 @@ function getCardContent(index){
     };
 }
 
+// Función para renderizar la tarjeta en el DOM
+function renderCard(){
+    const content = getCardContent(gameState.currentIndex);
+    card.querySelector('.card-image').src = content.image; // Actualizar la imagen
+    card.querySelector('.card-question').textContent = content.question; // Actualizar la pregunta
+    counter.textContent = content.counter; // Actualizar contador
+    card.style.backgroundColor = '#fff';
+}
+
 // Función para actualizar la tarjeta
 function updateCard() {
-    const content = getCardContent(gameState.currentIndex);
-    const cardImage = card.querySelector('.card-image');
-    const cardQuestion = card.querySelector('.card-question');
-    
-    cardImage.src = content.image; // Actualizar la imagen
-    cardQuestion.textContent = content.question; // Actualizar la pregunta
-    counter.textContent = content.counter; // Actualizar contador
-    
-    card.style.backgroundColor = '#fff'; // Restablecer el color de fondo a blanco
+    // Llamamos a la función para actualizar la UI
+    renderCard();
 
     // Aplicar la animación de rebote
     card.classList.add('bounce');
