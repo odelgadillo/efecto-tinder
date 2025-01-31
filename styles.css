@@ -123,22 +123,21 @@ body {
     background-color: #0056b3;
 }
 
-/* Animación de balanceo */
 @keyframes swing {
-    0% { transform: translateX(0); }    /* Posición inicial */
-    15% { transform: translateX(25px); } /* Movimiento largo a la derecha */
-    30% { transform: translateX(-20px); } /* Movimiento largo a la izquierda */
-    45% { transform: translateX(15px); } /* Movimiento un poco más corto a la derecha */
-    60% { transform: translateX(-10px); } /* Movimiento más corto a la izquierda */
-    75% { transform: translateX(5px); }  /* Movimiento pequeño a la derecha */
-    90% { transform: translateX(-3px); } /* Movimiento muy corto a la izquierda */
-    100% { transform: translateX(0); }   /* Vuelve al centro y se detiene */
+    0% { transform: translateX(0) rotate(0deg); }    
+    15% { transform: translateX(25px) rotate(5deg); }  /* Movimiento largo a la derecha con inclinación */
+    30% { transform: translateX(-20px) rotate(-4deg); } /* Movimiento largo a la izquierda con inclinación */
+    45% { transform: translateX(15px) rotate(3deg); }  /* Movimiento más corto a la derecha con menor inclinación */
+    60% { transform: translateX(-10px) rotate(-2deg); } /* Más corto a la izquierda */
+    75% { transform: translateX(5px) rotate(1deg); }  /* Movimiento pequeño */
+    90% { transform: translateX(-3px) rotate(-0.5deg); } /* Último rebote */
+    100% { transform: translateX(0) rotate(0deg); }  /* Se detiene en el centro */
 }
+
 
 /* Aplicar animación a la tarjeta solo al inicio */
 .card.tutorial-active {
     animation: swing 1.0s ease-in-out 1;
-    /* Repite la animación 3 veces */
 }
 
 /* Estilos para el mensaje de tutorial */
